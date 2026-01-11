@@ -17,6 +17,7 @@ impl<'a> Parser<'a> {
     }
 
     fn parsing_error(&self, msg: String) -> String {
+        /* Disgusting garbage that should be rewritten but i dont care enough rn */
         let line_start = self.content[..self.pos]
             .rfind('\n')
             .map(|i| i + 1)
@@ -97,7 +98,7 @@ impl<'a> Parser<'a> {
     fn parse_number(&mut self) -> Result<Value, String> {
         let number: String = self.content[self.pos..]
             .chars()
-            .take_while(|c| *c == '-' || *c == 'e' || *c == 'E' || *c == '.' || c.is_numeric())
+            .take_while(|c| *c == '-' || *c == 'e' || *c == 'E' || *c == '.' || c.is_numeric()) /* lol */
             .collect();
 
         self.pos += number.len();
@@ -169,7 +170,13 @@ impl<'a> Parser<'a> {
             'a'..='z' => self.parse_word(),
             '"' => self.parse_string(),
             '-' | '0'..='9' => self.parse_number(),
-            _ => Err(format!("Couldn't parse char: {}", self.current_char()?)),
+            _ => {
+                let ident: String = self.content[self.pos..]
+                    .chars()
+                    .take_while(|c| !c.is_whitespace())
+                    .collect();
+                Err(self.parsing_error(format!("Failed to parse ident: {}", ident)))
+            }
         }
     }
 }
