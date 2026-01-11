@@ -19,7 +19,7 @@ fn main() -> std::io::Result<()> {
         Err(e) => panic!("PARSING FAILED: \n {}", e),
     };
 
-    let _ = fs::write("result.json", val.stringify());
+    // let _ = fs::write("result.json", format!("{}", val));
 
     Ok(())
 }

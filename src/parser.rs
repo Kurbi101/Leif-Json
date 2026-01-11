@@ -16,14 +16,6 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn current_char(&mut self) -> Result<char, String> {
-        let slice = &self.content[self.pos..];
-        match slice.chars().next() {
-            Some(c) => Ok(c),
-            None => Err(self.parsing_error("End of file".to_string())),
-        }
-    }
-
     fn parsing_error(&self, msg: String) -> String {
         let line_start = self.content[..self.pos]
             .rfind('\n')
@@ -53,6 +45,14 @@ impl<'a> Parser<'a> {
             "",
             width = column - 1
         )
+    }
+
+    fn current_char(&mut self) -> Result<char, String> {
+        let slice = &self.content[self.pos..];
+        match slice.chars().next() {
+            Some(c) => Ok(c),
+            None => Err(self.parsing_error("End of file".to_string())),
+        }
     }
 
     fn read_char(&mut self) -> Result<char, String> {
